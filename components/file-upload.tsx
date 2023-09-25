@@ -50,7 +50,6 @@ export const FileUpload = ({
         onClientUploadComplete={(res) => {
           onChange(res?.[0].url);
           console.log("Files: ", res);
-          alert("Upload Completed");
         }}
         onUploadError={(error: Error) => {
           handleError(error);
