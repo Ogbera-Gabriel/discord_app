@@ -7,7 +7,7 @@ import qs from 'query-string';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 import { Form, FormControl, FormField, FormItem } from '../ui/form';
-import { Plus, Smile } from 'lucide-react';
+import { Plus, SendHorizontal, Smile } from 'lucide-react';
 import { Input } from '../ui/input';
 import { useModal } from '@/hooks/use-model-store';
 import { EmojiPicker } from '../emoji-packer';
@@ -57,6 +57,22 @@ export const ChatInput = ({
       console.log(error);
     }
   }
+  const onClick = async (values: z.infer<typeof formSchema>) => {
+    try {
+      const url = qs.stringifyUrl({
+        url: apiUrl,
+        query,
+      });
+
+      await axios.post(url, values);
+
+      form.reset();
+      router.refresh();
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
 
     return (
         <Form {...form}>
@@ -81,6 +97,12 @@ export const ChatInput = ({
                     placeholder={`Message ${type === "conversation" ? name : "#" + name}`}
                     {...field}
                   />
+                  <button
+                  className='absolute top-7 right-20 text-zinc-500 dark:text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300 transition'
+                  onClick={form.handleSubmit(onClick)}
+                  >
+                    <SendHorizontal />
+                  </button>
                   <div className="absolute top-7 right-8">
                     <EmojiPicker 
                        onChange={(emoji: string) => field.onChange(`${field.value} ${emoji}`)}
